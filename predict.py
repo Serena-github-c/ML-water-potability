@@ -11,7 +11,6 @@ with open(model_file, 'rb') as f_in:
     model = pickle.load(f_in)
 
 
-
 app=Flask('potability')
 
 @app.route('/predict', methods=['POST'])
@@ -29,8 +28,6 @@ def predict():
 
     return jsonify(result)
         
-    
-
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=9696)
     
