@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+# coding: utf-8
 
+# In[1]:
 
 
 import pandas as pd
@@ -7,16 +10,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
+# In[2]:
+
+
 df = pd.read_csv('water_potability.csv')
 df
 
 
+# In[3]:
 
 
 df.columns = df.columns.str.lower()
 df.columns
 
 
+# In[4]:
 
 
 for c in df.columns:
@@ -27,19 +35,28 @@ for c in df.columns:
     
 
 
+# In[5]:
+
+
 df.describe().round(3)
 
 
+# In[6]:
 
 
 df.isnull().sum()
 
 
+# ## Train Test split
+
+# In[7]:
 
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 
+
+# In[8]:
 
 
 df_full_train, df_test = train_test_split(df, test_size=0.2, random_state=1)
@@ -58,12 +75,15 @@ del df_val['potability']
 del df_test['potability']
 
 
+# In[9]:
+
+
 len(df_train), len(df_test), len(df_val), len(df) == len(df_train)+ len(df_test) +len(df_val)
 
 
 # # Filling in the missing values
 
-# In[50]:
+# In[10]:
 
 
 ph_mean = df_full_train.ph.mean()
@@ -71,7 +91,7 @@ sulfate_mean = df.sulfate.mean()
 trihalomethanes_mean = df.trihalomethanes.mean()
 
 
-# In[75]:
+# In[11]:
 
 
 df_test.ph = df_test.ph.fillna(ph_mean)
@@ -81,21 +101,21 @@ df_train.ph = df_train.ph.fillna(ph_mean)
 
 df_test.sulfate = df_test.sulfate.fillna(sulfate_mean)
 df_val.sulfate = df_val.sulfate.fillna(sulfate_mean)
-df_train.sulfate = df_train.sulfate.fillna(ph_mean)
+df_train.sulfate = df_train.sulfate.fillna(sulfate_mean)
 
 
 df_test.trihalomethanes = df_test.trihalomethanes.fillna(trihalomethanes_mean)
 df_val.trihalomethanes = df_val.trihalomethanes.fillna(trihalomethanes_mean)
-df_train.trihalomethanes = df_train.trihalomethanes.fillna(ph_mean)
+df_train.trihalomethanes = df_train.trihalomethanes.fillna(trihalomethanes_mean)
 
 
-# In[76]:
+# In[12]:
 
 
 df_train.isnull().sum()
 
 
-# In[68]:
+# In[13]:
 
 
 # Create a figure with subplots (2 rows, 5 columns)
@@ -113,7 +133,7 @@ plt.tight_layout()
 plt.show()
 
 
-# In[69]:
+# In[14]:
 
 
 df.potability.value_counts(normalize=True)
@@ -121,13 +141,12 @@ df.potability.value_counts(normalize=True)
 
 # ## Normalize data
 
-# In[85]:
+# In[15]:
 
 
-# Function to standardize the data
 def standardize_data(df_train, df_val, df_test):
     for column in df.columns:
-        if column != 'potability':  # Skip 'potability' column
+        if column != 'potability':  
             # Calculate the mean and standard deviation for each feature
             mean = df_train[column].mean()
             std = df_train[column].std()
@@ -137,25 +156,28 @@ def standardize_data(df_train, df_val, df_test):
             df_test[column] = (df_test[column] - mean) / std
             df_val[column] = (df_val[column] - mean) / std
 
+        del df_train['potability'] 
+        del df_test['potability'] 
+        del df_val['potability'] 
 
     return df_train, df_val , df_test
 
 df_train, df_val, df_test = standardize_data(df_full_train, df_val ,df_test)
 
 
-# In[86]:
+# In[16]:
 
 
 df_train.head()
 
 
-# In[87]:
+# In[17]:
 
 
 df_train.describe().round(3)
 
 
-# In[88]:
+# In[18]:
 
 
 # Create a figure with subplots (2 rows, 5 columns)
@@ -176,12 +198,12 @@ plt.show()
 
 # ## Mutual information score
 
-# In[89]:
+# In[19]:
 
 
 from sklearn.metrics import mutual_info_score
 for c in df.columns:
-    print(c, mutual_info_score(df_train.potability, df_train[c]).round(4)*100)
+    print(c, mutual_info_score(y_train, df_train[c]).round(4)*100)
 
 
 # In[ ]:
@@ -192,7 +214,7 @@ for c in df.columns:
 
 # # Outlier detection
 
-# In[ ]:
+# In[20]:
 
 
 Q1 = df.quantile(0.25)
@@ -204,14 +226,14 @@ print(outliers)
 
 # ## Correlation Analysis
 
-# In[78]:
+# In[21]:
 
 
 corr = df.corr()
 corr.round(2)
 
 
-# In[79]:
+# In[22]:
 
 
 plt.figure(figsize=(8, 6))
@@ -220,28 +242,28 @@ sns.heatmap(corr, annot=True, fmt='.2f')
 
 # # Model
 
-# In[80]:
+# In[23]:
 
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, confusion_matrix, classification_report
 
 
-# In[83]:
+# In[24]:
 
 
 model = LogisticRegression(solver='liblinear', max_iter=1000)
 model.fit(X_train, y_train)
 
 
-# In[82]:
+# In[25]:
 
 
 y_pred = model.predict_proba(df_val)[:,1]
 roc_auc_score(y_val, y_pred)
 
 
-# In[30]:
+# In[ ]:
 
 
 classification_report(y_val, y_pred)
@@ -261,27 +283,27 @@ plt.xlabel('Predicted')
 plt.ylabel('Truth')
 
 
-# In[31]:
+# In[ ]:
 
 
 from sklearn.model_selection import KFold
 
 
-# In[32]:
+# In[26]:
 
 
 kfold = KFold(n_splits=10 , shuffle=True, random_state=1)
 next(kfold.split(df_full_train))
 
 
-# In[33]:
+# In[27]:
 
 
 train_idx, val_idx = next(kfold.split(df_full_train))
 len(train_idx), len(val_idx), len(df_full_train)
 
 
-# In[37]:
+# In[ ]:
 
 
 from tqdm.auto import tqdm
@@ -317,22 +339,40 @@ for C in tqdm([0.001, 0.01, 0.1, 0.5, 1, 5, 10]):
     print('C=%s mean= %.3f - std=%.3f' % (C, np.mean(scores), np.std(scores)))
 
 
-# In[38]:
+# In[ ]:
 
 
 scores
 
 
-# In[39]:
+# In[ ]:
 
 
 df_full_train
 
 
-# In[40]:
+# In[ ]:
 
 
 get_ipython().system(' jupyter nbconvert --to script project.ipynb')
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
