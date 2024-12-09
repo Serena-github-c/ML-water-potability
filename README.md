@@ -19,7 +19,7 @@ Access to clean water is a fundamental necessity for human health and well-being
 
  # Prerequisites
 - Python 3.7 or above
-- Docker (if you wish to run the application in a container)
+- Docker (if you wish to run the application in a container).<br>
 You can check if Python and Docker are already installed on your machine by running the following commands in your terminal:
 ```bash
   python --version
