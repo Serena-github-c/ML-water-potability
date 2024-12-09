@@ -22,15 +22,15 @@ Access to clean water is a fundamental necessity for human health and well-being
 - Docker (if you wish to run the application in a container).<br>
 - pipenv for setting the environment. You can install it using:
 ```bash
-  pip install pipenv 
+pip install pipenv 
 ```
 
 You can check if Python and Docker are already installed on your machine by running the following commands in your terminal:
 ```bash
-  python --version
+python --version
 ```
 ```bash
-  docker --version
+docker --version
 ```
 
 # Libraries Used
@@ -76,15 +76,15 @@ This repository contains:
 
 2. Set up a virtual environment and install the required dependencies:
    ```bash
-    pipenv install
+   pipenv install
 
 3. (Optional) To run the project inside Docker, build the Docker image:
    ```bash
-    docker build -t water-potability-prediction .
+   docker build -t water-potability-prediction .
 
 4. (Optional) Run the Docker container:
    ```bash
-    docker run -p 9696:9696 water-potability-prediction
+   docker run -p 9696:9696 water-potability-prediction
 
 # Running the Scripts
 ### Training the Model
@@ -123,7 +123,7 @@ docker build -t water-potability .
 
 - Run the Docker container:
 ```bash
-    docker run -p 9696:9696 water-potability
+docker run -p 9696:9696 water-potability
 ```
 
 This will start a local server on port 9696, and you can make requests to the application.
