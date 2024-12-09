@@ -79,7 +79,7 @@ This repository contains:
 
 4. (Optional) Run the Docker container:
    ```bash
-    docker run -p 5000:5000 water-potability-prediction
+    docker run -p 9696:9696 water-potability-prediction
 
 # Running the Scripts
 ### Training the Model
@@ -116,9 +116,10 @@ If you prefer to run the application inside Docker, follow these steps:
 docker build -t water-potability .
 ```
 
-### Run the Docker container:
-
+- Run the Docker container:
+```bash
     docker run -p 9696:9696 water-potability
+```
 
 This will start a local server on port 9696, and you can make requests to the application.
 
