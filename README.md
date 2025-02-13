@@ -71,7 +71,7 @@ This repository contains:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/water-potability-prediction.git
+   git clone https://github.com/Serena-github-c/ML-water-potability.git
    cd water-potability-prediction
 
 2. Set up a virtual environment and install the required dependencies:
